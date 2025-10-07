@@ -1,6 +1,6 @@
 # 🤖 GridWorld RL Agent - 5×13 Grid with Multiple Obstacles
 
-Deep Q-Learning agent navigating a challenging grid world with neural network Q-value approximation.
+ANN agent navigating a challenging grid world with neural network Q-value approximation.
 
 ---
 

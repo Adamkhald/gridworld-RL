@@ -1,6 +1,6 @@
 # 🤖 GridWorld RL Agent with Neural Network
 
-Deep Q-Learning agent that learns to navigate a grid world using an Artificial Neural Network for Q-value approximation.
+ANN agent that learns to navigate a grid world using an Artificial Neural Network for Q-value approximation.
 
 ---
 
