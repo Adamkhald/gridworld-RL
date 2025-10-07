@@ -2,8 +2,10 @@
 
 A comprehensive reinforcement learning playground for exploring and mastering grid world environments. This project provides an interactive framework for experimenting with various RL algorithms, visualizing agent behavior, and understanding the fundamentals of intelligent decision-making in discrete spaces.
 
-![Grid World Agent Navigation](https://miro.medium.com/v2/resize:fit:1400/1*3WbjfQu3IS9pcQN0MfJK2g.gif)
-*Example of an RL agent learning to navigate a grid world environment*
+![Grid World Agent Navigation](https://raw.githubusercontent.com/openai/gym/master/docs/_static/img/cart_pole.gif)
+*Example of an RL agent learning in an environment*
+
+> **Note**: Add your own training GIFs to showcase your agents! Place them in an `assets/` folder and reference them like: `![Agent Demo](assets/training_demo.gif)`
 
 ## 🎯 About This Project
 
@@ -17,8 +19,10 @@ Grid worlds are discrete environments represented as 2D grids where agents navig
 - **Goals** - Target destinations
 - **Rewards/Penalties** - Feedback signals
 
-![MiniGrid Environment](https://gymnasium.farama.org/_images/minigrid-door-key-8x8.gif)
-*Agent navigating a MiniGrid environment with doors and keys*
+<div align="center">
+  <img src="https://gymnasium.farama.org/_images/minigrid-doorkey.gif" alt="MiniGrid Environment" width="300"/>
+  <p><em>Agent navigating a MiniGrid environment with doors and keys</em></p>
+</div>
 
 These simple yet powerful environments are perfect for understanding core RL concepts like:
 - State representation
@@ -30,9 +34,6 @@ These simple yet powerful environments are perfect for understanding core RL con
 ## 🧠 Reinforcement Learning Fundamentals
 
 This project implements and compares multiple RL algorithms:
-
-![Q-Learning Process](https://www.kdnuggets.com/wp-content/uploads/arya_reinforcement_learning_q_learning_1.gif)
-*Visualization of Q-Learning agent exploring and learning optimal paths*
 
 ### **Q-Learning**
 - Model-free, off-policy algorithm
@@ -49,6 +50,11 @@ This project implements and compares multiple RL algorithms:
 - Handles larger state spaces
 - Uses experience replay and target networks
 
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/12345678/example.gif" alt="Training Progress" width="400"/>
+  <p><em>📊 Add your training progress GIFs here to show learning curves!</em></p>
+</div>
+
 ## 🏗️ Built With Gymnasium
 
 This project leverages **Gymnasium** (formerly OpenAI Gym), the standard framework for developing and comparing RL algorithms. Gymnasium provides:
@@ -56,9 +62,6 @@ This project leverages **Gymnasium** (formerly OpenAI Gym), the standard framewo
 - Consistent action and observation spaces
 - Built-in rendering capabilities
 - Extensive environment library compatibility
-
-![Gymnasium Environments](https://miro.medium.com/v2/resize:fit:1400/1*pa_1HAW1-RvGr4T0oFrTXA.gif)
-*Various grid world configurations in Gymnasium framework*
 
 ## ✨ Features
 
@@ -69,7 +72,33 @@ This project leverages **Gymnasium** (formerly OpenAI Gym), the standard framewo
 - **Interactive Visualizations**: Watch your agents learn in real-time
 - **Comprehensive Documentation**: Auto-generated docs for all components
 
-#
+## 📸 Visual Examples
+
+To add your own training visualizations:
+
+1. Create an `assets/` or `docs/images/` folder in your repository
+2. Save your training GIFs/images there
+3. Reference them in the README like this:
+
+```markdown
+![Training Demo](assets/q_learning_training.gif)
+![Agent Performance](assets/agent_comparison.png)
+```
+
+**Tip**: Use tools like `matplotlib` with `animation` module or `gymnasium`'s built-in rendering to generate training GIFs!
+
+## 🚀 Getting Started
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/gridworld-RL.git
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run a sample experiment
+python main.py --algorithm q-learning --episodes 1000
+```
 
 ## 📊 Example Use Cases
 
