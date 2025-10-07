@@ -82,7 +82,7 @@ This project leverages **Gymnasium** (formerly OpenAI Gym), the standard framewo
 ## 👨‍💻 About the Author
 
 **Adam Khald**  
-2nd Year AI & Data Science Engineering Student  
+4th Year AI & Data Science Engineering Student  
 ENSAM Meknes
 
 This project was developed as part of my journey in understanding and implementing reinforcement learning algorithms. Feel free to reach out for collaborations or discussions about RL!
