@@ -57,7 +57,7 @@ This project leverages **Gymnasium** (formerly OpenAI Gym), the standard framewo
 - Built-in rendering capabilities
 - Extensive environment library compatibility
 
-![Gymnasium Environments](https://miro.medium.com/v2/resize:fit:1400/1*pa_1HAW1-RvGr4T0oFrTXA.gif)
+![Gymnasium Environments](Approximator-HomeWork\Upgrade-in-the-philosophy\output\gifs\test_episode_4.gif)
 *Various grid world configurations in Gymnasium framework*
 
 ## ✨ Features
