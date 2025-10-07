@@ -69,18 +69,7 @@ This project leverages **Gymnasium** (formerly OpenAI Gym), the standard framewo
 - **Interactive Visualizations**: Watch your agents learn in real-time
 - **Comprehensive Documentation**: Auto-generated docs for all components
 
-## 🚀 Getting Started
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/gridworld-RL.git
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run a sample experiment
-python main.py --algorithm q-learning --episodes 1000
-```
+#
 
 ## 📊 Example Use Cases
 
