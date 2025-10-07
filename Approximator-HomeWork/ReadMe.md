@@ -29,58 +29,71 @@ Output (4): Q-values for each action
 ```
 
 **Training:** Q-Learning with TD error backpropagation
-- Episodes: 500
-- Learning rate: 0.001
-- Discount factor: 0.95
-- Epsilon: 1.0 → 0.01 (decay: 0.995)
 
 ---
 
-## 📊 Results
+## 📊 Training Results
 
 ![Training Curves](output/plots/training_curves.png)
-
-| Metric | Early (Ep 1-100) | Late (Ep 400-500) |
-|--------|------------------|-------------------|
-| Avg Reward | -15.2 | +6.8 |
-| Avg Steps | 45.3 | 12.1 |
-| Success Rate | 12% | 89% |
-
-**Convergence:** ~300-350 episodes
 
 ---
 
 ## 🎬 Agent Behavior
 
-### Test Episodes (Fixed Environment)
+### Test Episodes
 
 | Episode 1 | Episode 2 | Episode 3 |
 |-----------|-----------|-----------|
 | ![Test 1](output/gifs/test_episode_1.gif) | ![Test 2](output/gifs/test_episode_2.gif) | ![Test 3](output/gifs/test_episode_3.gif) |
 
-✅ Agent learns optimal paths to goals  
-✅ Avoids obstacles efficiently  
-✅ Minimizes steps taken  
+| Episode 4 | Episode 5 |
+|-----------|-----------|
+| ![Test 4](output/gifs/test_episode_4.gif) | ![Test 5](output/gifs/test_episode_5.gif) |
 
 ---
 
-## ⚠️ Key Issue: Randomized Environments
+## ⚠️ Critical Issue: Agent Doesn't Move with Randomized Environments
 
-**Problem:** Agent doesn't learn when environment randomizes each episode (`randomize=True`)
+**Problem:** When `randomize=True` is used during training/testing, the agent fails to learn and doesn't move intelligently.
 
-**Root Cause:** State representation is incomplete
+### Root Cause: Incomplete State Representation
+
+**Current state representation:**
 ```python
-Current:  [agent_row, agent_col]  # Only 2 features
-Missing:  [goal1_row, goal1_col, goal2_row, goal2_col, obstacle_row, obstacle_col]
+state = [agent_row, agent_col]  # Only 2 features
 ```
 
-The network can't tell where goals/obstacles are → same position has different optimal actions in different environments → no stable learning.
+**The Problem:**
+The neural network only knows WHERE the agent is, but has NO information about:
+- Where the goals are located
+- Where the obstacle is located
 
-**Solution:** Expand state to 8 features:
+When the environment randomizes every episode:
+- Position `(2, 3)` might have a goal to the RIGHT in Episode 1
+- Position `(2, 3)` might have a goal to the LEFT in Episode 2
+- Position `(2, 3)` might have an obstacle to the RIGHT in Episode 3
+
+The network sees the same input `[2, 3]` but needs to output different Q-values depending on the environment configuration. **This is impossible without knowing where goals and obstacles are.**
+
+### Why It Can't Learn
+
+1. **No stable mapping**: Same state → different optimal actions (depending on environment)
+2. **Catastrophic interference**: Learning Episode 2 "unlearns" Episode 1
+3. **Random behavior**: Network outputs become meaningless averages
+
+### Solution: Expand State Representation
+
+**Fixed state (8 features):**
 ```python
-state = [agent_row, agent_col, goal1_row, goal1_col, 
-         goal2_row, goal2_col, obstacle_row, obstacle_col]
+state = [
+    agent_row, agent_col,      # Where am I?
+    goal1_row, goal1_col,      # Where is goal 1?
+    goal2_row, goal2_col,      # Where is goal 2?
+    obstacle_row, obstacle_col # Where is the obstacle?
+]
 ```
+
+Now the network has complete information and can learn: "If I'm at (2,3) and goal is at (2,5), move RIGHT"
 
 ---
 
@@ -90,7 +103,7 @@ state = [agent_row, agent_col, goal1_row, goal1_col,
 # Create environment
 env = create_gridworld(height=5, width=5, start=(0, 0))
 
-# Train agent
+# Train agent (fixed environment)
 weights, history = train_agent(env, episodes=500)
 
 # Test agent
@@ -98,19 +111,9 @@ results = test_agent(env, weights, episodes=5, render_gif=True)
 ```
 
 **Outputs:**
-- `output/models/` - Trained network weights
-- `output/plots/` - Training curves
-- `output/gifs/` - Agent behavior animations
-
----
-
-## 📈 Future Improvements
-
-1. **Expand state representation** (8 features instead of 2)
-2. **Larger hidden layer** (128+ neurons for complex environments)
-3. **Experience replay** buffer for stable learning
-4. **Target network** for improved convergence
-5. **Convolutional layers** for image-based states
+- `output/models/q_network.npz` - Trained network weights
+- `output/plots/training_curves.png` - Training performance
+- `output/gifs/test_episode_*.gif` - Agent behavior animations
 
 ---
 
@@ -125,7 +128,3 @@ results = test_agent(env, weights, episodes=5, render_gif=True)
 │   └── gifs/                # Agent behavior animations
 └── README.md
 ```
-
----
-
-**Status:** ✅ Works perfectly on fixed environments | ⚠️ Needs state expansion for randomized environments
