@@ -1,45 +1,98 @@
-# UC Berkeley Pacman AI - Reinforcement Learning Project
+# Enhanced Feature Extractors for Pacman
 
-## Quick Setup
-1. Download project files from Berkeley AI website
-2. Place files in a directory (e.g., `reinforcement/`)
-3. Ensure Python 3.x is installed
+## Overview
 
-## Modified Files
+This file contains three feature extractors for Pacman approximate Q-learning:
+- `SimpleExtractor` (original)
+- `EnhancedExtractor` (new)
+- `AdvancedExtractor` (new)
 
-### 1. `valueIterationAgents.py`
-Implements **Value Iteration** algorithm:
-- `runValueIteration()` - Batch value iteration updates
-- `computeQValueFromValues()` - Calculates Q(s,a) values
-- `computeActionFromValues()` - Returns optimal action (policy)
+## Usage
 
-### 2. `qlearningAgents.py`
-Implements **Q-Learning** agent:
-- `getQValue()` - Returns Q(state, action)
-- `computeValueFromQValues()` - Returns max Q-value
-- `computeActionFromQValues()` - Returns greedy action
-- `getAction()` - Epsilon-greedy exploration
-- `update()` - Q-learning update rule
-- Bonus: `ApproximateQAgent` for feature-based Q-learning
-
-### 3. `analysis.py`
-Parameter tuning for different agent behaviors:
-- **question2a**: Low discount, no noise → risk cliff for close exit
-- **question2b**: Low discount, some noise → avoid cliff, close exit
-- **question2c**: High discount, no noise → risk cliff for distant exit
-- **question2d**: High discount, some noise → avoid cliff, distant exit
-- **question2e**: High living reward → never terminate
-
-## Running Tests
 ```bash
-# Test Value Iteration
-python autograder.py -q q1
+# With SimpleExtractor
+python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumGrid
 
-# Test Analysis (parameter tuning)
-python autograder.py -q q2
+# With EnhancedExtractor
+python pacman.py -p ApproximateQAgent -a extractor=EnhancedExtractor -x 50 -n 60 -l mediumGrid
 
-# Test Q-Learning
-python autograder.py -q q3
+# With AdvancedExtractor
+python pacman.py -p ApproximateQAgent -a extractor=AdvancedExtractor -x 100 -n 110 -l mediumGrid
+```
 
-# Run all tests
-python autograder.py
+## SimpleExtractor (Original)
+
+**Features extracted:**
+- `bias` - Constant bias term (always 1.0)
+- `#-of-ghosts-1-step-away` - Count of ghosts one step away
+- `eats-food` - Will the action eat food? (1.0 or 0.0)
+- `closest-food` - Distance to nearest food (normalized)
+
+## EnhancedExtractor (New)
+
+**Food Features:**
+- `bias` - Constant bias term (always 1.0)
+- `eats-food` - Indicator if action will eat food
+- `closest-food` - Normalized distance to nearest food
+- `food-remaining` - Ratio of remaining food to total grid size
+- `food-density` - Food count in 5x5 area around next position (normalized by 25)
+- `safe-food-eat` - Eating food when nearest ghost is > 3 steps away
+- `risky-food-eat` - Eating food when nearest ghost is ≤ 2 steps away
+
+**Ghost Features:**
+- `ghosts-in-danger-zone` - Ratio of ghosts within 3 steps
+- `closest-ghost` - Normalized distance to nearest ghost
+- `ghost-collision-imminent` - Ghost at distance ≤ 1
+- `ghost-very-close` - Ghost at distance ≤ 2
+- `scared-ghosts` - Ratio of scared ghosts to total ghosts
+- `closest-scared-ghost` - Normalized distance to nearest scared ghost
+- `eats-scared-ghost` - Will the action eat a scared ghost?
+
+**Capsule Features:**
+- `capsules-remaining` - Number of power capsules left
+- `closest-capsule` - Normalized distance to nearest capsule
+- `capsule-when-danger` - Inverse distance to capsule when ghosts are within 5 steps
+
+**Spatial Features:**
+- `num-legal-actions` - Ratio of legal moves from next position (out of 4)
+- `dead-end` - Only one legal action available from next position
+- `corner` - Exactly two legal actions available (corner detection)
+
+**Action Features:**
+- `stop-action` - Penalty indicator for STOP action
+- `reverse-direction` - Penalty indicator for reversing direction
+
+**Total: 21 features**
+
+## AdvancedExtractor (New)
+
+**Includes all EnhancedExtractor features plus:**
+
+**Escape Route Analysis:**
+- `escape-routes` - Ratio of safe escape paths (no ghosts within 2 steps)
+
+**Food Clustering:**
+- `food-cluster-ahead` - Food density in the direction of movement
+
+**Ghost Prediction:**
+- `approaching-scared-ghost` - Moving closer to a scared ghost
+- `ghost-threat-level` - Ratio of non-scared ghosts moving toward Pacman
+
+**Lookahead Planning:**
+- `good-followup-moves` - Quality score of second-step actions (0-4 scale)
+
+**Strategic Positioning:**
+- `distance-to-center` - Normalized distance to map center
+
+**Total: 27 features**
+
+## Feature Normalization
+
+All features are divided by 10.0 at the end of extraction to prevent divergence during Q-learning updates.
+
+## Implementation Notes
+
+- All distance features are normalized by `(walls.width * walls.height)` to keep values between 0 and 1
+- All ratio features are calculated as counts divided by totals
+- Binary indicator features are either 0.0 or 1.0
+- The `manhattanDistance` function is used for all distance calculations
